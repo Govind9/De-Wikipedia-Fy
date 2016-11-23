@@ -35,12 +35,9 @@ void link_discipline(const char *name)
 		return;
 	
 	while (file.get(c)) {
-		if (c == '[') {
-			cout << c << "\t" << int(c) << endl;
+		if (c == '[')
 			while ((c == '[' || c == ']' || c == ',' || c < 0 
-				|| (c >= '0' && c <= ':')) && file.get(c))
-				cout << c << "\t" << int(c) << endl;
-		}
+				|| (c >= '0' && c <= ':')) && file.get(c));
 		str += c;
 	}
 	file.close();
