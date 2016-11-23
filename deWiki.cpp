@@ -1,35 +1,59 @@
+#include <iostream>
 #include <fstream>
 #include <string>
 
 using namespace std;
 
-int main (int argc, char **argv)
+void newline_discipline(const char *name)
+{
+	char c, p;
+	string str = "";
+
+	ifstream file(name);
+	if (file.fail())
+		return;
+
+	while (file.get(c)) {
+		if (c == '\n' && p == '\n')
+			continue;
+		str += c;
+		p = c;
+	}
+	file.close();
+	ofstream o(name);
+	o << str;
+	o.close();
+}
+
+void link_discipline(const char *name)
 {
 	char c;
-	string str = "", temp;
+	string str = "";
 	
+	ifstream file(name);
+	if (file.fail())
+		return;
+	
+	while (file.get(c)) {
+		if (c == '[') {
+			cout << c << "\t" << int(c) << endl;
+			while ((c == '[' || c == ']' || c == ',' || c < 0 
+				|| (c >= '0' && c <= ':')) && file.get(c))
+				cout << c << "\t" << int(c) << endl;
+		}
+		str += c;
+	}
+	file.close();
+	ofstream o(name);
+	o << str;
+	o.close();
+}
+
+int main (int argc, char **argv)
+{
 	if (argc < 2)
 		return -1;
-	
-	ifstream f1(argv[1]);
-	if (f1.file())
-		return -1;
-	while (f1.get(c)) {
-		if (c == '[') {
-			temp = c;
-			while (c != ']' && f1.get(c)) {
-				temp += c;
-			}
-			if (c != ']')
-				str += temp;
-		}
-		else
-			str += c;
-	}
-	
-	ofstream f2(argv[1]);
-	f2 << str;
-	f2.close();
-	
+	link_discipline(argv[1]);
+	newline_discipline(argv[1]);
 	return 0;
 }
